@@ -60,6 +60,9 @@ public class FileManagementServiceImpl implements FileManagementService {
 
     @Override
     public void deleteFile(Authentication authentication, Integer fileId) {
-        fileMapper.deleteById(fileId);
+        User user = userService.getUserByUserName(authentication.getName());
+        if(user == null) return ;
+
+        fileMapper.deleteById(fileId, user.getUserId());
     }
 }

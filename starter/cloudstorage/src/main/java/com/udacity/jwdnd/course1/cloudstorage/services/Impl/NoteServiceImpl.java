@@ -53,7 +53,7 @@ public class NoteServiceImpl implements NoteService {
         if(user == null) return new NoteResponse("Unable to perform action", null);
         noteRequest.setUserId(user.getUserId());
 
-        int row = noteMapper.update(new Note(noteRequest.getNoteId(), noteRequest.getNoteTitle(), noteRequest.getNoteDescription(),null));
+        int row = noteMapper.update(new Note(noteRequest.getNoteId(), noteRequest.getNoteTitle(), noteRequest.getNoteDescription(), user.getUserId()), user.getUserId());
 
         if(row < 0) return new NoteResponse("Unable to complete requees. Please try again", null);
 
@@ -64,7 +64,10 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public void deleteNote(Authentication authentication, Integer noteId) {
-        noteMapper.deleteById(noteId);
+        User user = userService.getUserByUserName(authentication.getName());
+        if(user == null) return ;
+
+        noteMapper.deleteById(noteId, user.getUserId());
     }
 
 

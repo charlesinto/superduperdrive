@@ -20,10 +20,10 @@ public interface CredentialMapper {
     @Options(useGeneratedKeys = true, keyProperty = "credentialId")
     int insert(Credential credential);
 
-    @Insert("UPDATE CREDENTIALS SET url = #{url}, userName = #{userName} where credentialId = #{credentialId}")
+    @Insert("UPDATE CREDENTIALS SET url = #{url}, userName = #{userName} where credentialId = #{credentialId} and userId = #{userId}")
     @Options(useGeneratedKeys = true, keyProperty = "credentialId")
     int update(Credential credential);
 
-    @Delete("DELETE FROM CREDENTIALS where credentialId = ${credentialId}")
-    void deleteById(Integer credentialId);
+    @Delete("DELETE FROM CREDENTIALS where credentialId = ${credentialId} and userId = #{userId}")
+    void deleteById(Integer credentialId, Integer userId);
 }

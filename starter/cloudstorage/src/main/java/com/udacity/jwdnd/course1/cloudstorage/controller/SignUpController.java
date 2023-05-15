@@ -32,9 +32,9 @@ public class SignUpController {
         SignupResponse signupResponse = userService.signupUser(data);
 
         if(signupResponse.getMessage() == "Login successful")
-            return new ModelAndView("redirect:/home");
+            return new ModelAndView("redirect:/login");
 
-        model.addAttribute("signupError", signupResponse.getMessage());
+            model.addAttribute("signupError", signupResponse.getMessage());
 
         return new ModelAndView("signup");
     }

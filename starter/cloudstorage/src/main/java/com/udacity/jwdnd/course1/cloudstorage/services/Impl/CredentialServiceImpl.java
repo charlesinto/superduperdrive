@@ -73,7 +73,7 @@ public class CredentialServiceImpl implements CredentialService {
 
         credentialRequest.setUserId(user.getUserId());
 
-        int row = credentialMapper.update(new Credential(credentialRequest.getCredentialId(), credentialRequest.getUserName(), null, credentialRequest.getPassword(), credentialRequest.getUrl(), null));
+        int row = credentialMapper.update(new Credential(credentialRequest.getCredentialId(), credentialRequest.getUserName(), null, credentialRequest.getPassword(), credentialRequest.getUrl(), user.getUserId()));
 
         if(row < 0) return new CredentialResponse("Unable to complete requees. Please try again", null);
 
@@ -84,7 +84,10 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public void deleteCredential(Authentication authentication, Integer credentialId) {
-         credentialMapper.deleteById(credentialId);
+        User user = userService.getUserByUserName(authentication.getName());
+        if(user == null) return ;
+
+         credentialMapper.deleteById(credentialId, user.getUserId());
     }
 
 }

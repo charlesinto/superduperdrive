@@ -20,10 +20,10 @@ public interface NoteMapper {
     @Options(useGeneratedKeys = true, keyProperty = "noteId")
     int insert(Note note);
 
-    @Insert("UPDATE NOTES SET noteTitle = #{noteTitle}, noteDescription = #{noteDescription} where noteId = #{noteId}")
+    @Insert("UPDATE NOTES SET noteTitle = #{noteTitle}, noteDescription = #{noteDescription} where noteId = #{noteId} and userId = #{userId}")
     @Options(useGeneratedKeys = true, keyProperty = "noteId", keyColumn = "noteId")
-    int update(Note note);
+    int update(Note note, Integer userId);
 
-    @Delete("DELETE FROM NOTES where noteId = ${noteId}")
-    void deleteById(Integer noteId);
+    @Delete("DELETE FROM NOTES where noteId = ${noteId} and userId = #{userId}")
+    void deleteById(Integer noteId, Integer userId);
 }

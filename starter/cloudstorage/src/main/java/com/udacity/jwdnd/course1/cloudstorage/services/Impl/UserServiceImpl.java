@@ -75,11 +75,11 @@ public class UserServiceImpl implements UserService {
 
             User user = this.getUserByUserName(data.getUserName());
 
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUserName(), data.getPassword(), new ArrayList<>()));
-
-            if(authentication.isAuthenticated()){
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+//            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUserName(), data.getPassword(), new ArrayList<>()));
+//
+//            if(authentication.isAuthenticated()){
+//                SecurityContextHolder.getContext().setAuthentication(authentication);
+//            }
 
 
             return new SignupResponse("Login successful", user);
