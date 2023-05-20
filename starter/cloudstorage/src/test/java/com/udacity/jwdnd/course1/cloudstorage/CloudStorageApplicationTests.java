@@ -3,7 +3,6 @@ package com.udacity.jwdnd.course1.cloudstorage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -13,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 import java.io.File;
+import java.util.List;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
 
@@ -20,6 +21,13 @@ class CloudStorageApplicationTests {
 	private int port;
 
 	private WebDriver driver;
+
+	private LoginPage loginPage;
+
+	private NotePage notePage;
+
+
+	private CredentialPage credentialPage;
 
 	@BeforeAll
 	static void beforeAll() {
@@ -29,6 +37,9 @@ class CloudStorageApplicationTests {
 	@BeforeEach
 	public void beforeEach() {
 		this.driver = new ChromeDriver();
+		loginPage = new LoginPage(driver);
+		credentialPage = new CredentialPage(driver);
+		notePage = new NotePage(driver);
 	}
 
 	@AfterEach
@@ -177,6 +188,123 @@ class CloudStorageApplicationTests {
 	 * Read more about file size limits here: 
 	 * https://spring.io/guides/gs/uploading-files/ under the "Tuning File Upload Limits" section.
 	 */
+
+	private void doLoginWithoutTest(String username, String password){
+		driver.get("http://localhost:" + this.port + "/login");
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputUsername")));
+		WebElement loginUserName = driver.findElement(By.id("inputUsername"));
+		loginUserName.click();
+		loginUserName.sendKeys(username);
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputPassword")));
+		WebElement loginPassword = driver.findElement(By.id("inputPassword"));
+		loginPassword.click();
+		loginPassword.sendKeys(password);
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-button")));
+		WebElement loginButton = driver.findElement(By.id("login-button"));
+		loginButton.click();
+	}
+
+	@Test
+	public void testNoteCreation() throws InterruptedException {
+		doMockSignUp("charles", "onuorah", "admin", "admin");
+		// Log in to our dummy account.
+		doLoginWithoutTest("admin", "admin");
+
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+
+		webDriverWait.until(ExpectedConditions.titleContains("Home"));
+
+		notePage.addNote("charles", "charles is awesome");
+
+
+		Thread.sleep(5000);
+
+		List<WebElement> rows = notePage.getNoteTable().findElements(By.cssSelector("tbody tr"));
+
+		Assertions.assertEquals(1, rows.size());
+	}
+
+	@Test
+	public void testCredentialCreate() throws InterruptedException {
+		doMockSignUp("charles", "onuorah", "admin", "admin");
+		// Log in to our dummy account.
+		doLoginWithoutTest("admin", "admin");
+
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+
+		webDriverWait.until(ExpectedConditions.titleContains("Home"));
+
+		credentialPage.addCredential("facebook.com", "charles", "admin");
+
+
+		Thread.sleep(5000);
+
+		List<WebElement> rows = credentialPage.getCredentialTable().findElements(By.cssSelector("tbody tr"));
+
+		Assertions.assertEquals(1, rows.size());
+	}
+
+	@Test
+	public void testCredentialDelete() throws InterruptedException {
+		doMockSignUp("charles", "onuorah", "admin", "admin");
+		// Log in to our dummy account.
+		doLoginWithoutTest("admin", "admin");
+
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+
+		webDriverWait.until(ExpectedConditions.titleContains("Home"));
+
+		credentialPage.addCredential("facebook.com", "charles", "admin");
+
+
+		Thread.sleep(5000);
+
+		List<WebElement> rows = notePage.getNoteTable().findElements(By.cssSelector("tbody tr"));
+
+		if(rows.size() > 0){
+			credentialPage.deleteCredential(rows.get(0));
+
+			Thread.sleep(3000);
+
+			List<WebElement> tableRows = notePage.getNoteTable().findElements(By.cssSelector("tbody tr"));
+
+			Assertions.assertEquals(0, tableRows.size());
+		}
+	}
+
+	@Test
+	public void testNoteDeletion() throws InterruptedException {
+		doMockSignUp("charles", "onuorah", "admin", "admin");
+		// Log in to our dummy account.
+		doLoginWithoutTest("admin", "admin");
+
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+
+		webDriverWait.until(ExpectedConditions.titleContains("Home"));
+
+		notePage.addNote("charles", "charles is awesome");
+
+
+		Thread.sleep(5000);
+
+		List<WebElement> rows = notePage.getNoteTable().findElements(By.cssSelector("tbody tr"));
+
+		if(rows.size() > 0){
+			notePage.deleteNote(rows.get(0));
+
+			Thread.sleep(3000);
+
+			List<WebElement> tableRows = notePage.getNoteTable().findElements(By.cssSelector("tbody tr"));
+
+			Assertions.assertEquals(0, tableRows.size());
+		}
+	}
+
+
 	@Test
 	public void testLargeUpload() {
 		// Create a test account
