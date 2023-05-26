@@ -263,14 +263,14 @@ class CloudStorageApplicationTests {
 
 		Thread.sleep(5000);
 
-		List<WebElement> rows = notePage.getNoteTable().findElements(By.cssSelector("tbody tr"));
+		List<WebElement> rows = credentialPage.getCredentialTable().findElements(By.cssSelector("tbody tr"));
 
 		if(rows.size() > 0){
 			credentialPage.deleteCredential(rows.get(0));
 
 			Thread.sleep(3000);
 
-			List<WebElement> tableRows = notePage.getNoteTable().findElements(By.cssSelector("tbody tr"));
+			List<WebElement> tableRows = credentialPage.getCredentialTable().findElements(By.cssSelector("tbody tr"));
 
 			Assertions.assertEquals(0, tableRows.size());
 		}
@@ -302,6 +302,58 @@ class CloudStorageApplicationTests {
 
 			Assertions.assertEquals(0, tableRows.size());
 		}
+	}
+
+	@Test
+	public void testNoteUpdate() throws InterruptedException {
+		doMockSignUp("charles", "onuorah", "admin", "admin");
+		// Log in to our dummy account.
+		doLoginWithoutTest("admin", "admin");
+
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+
+		webDriverWait.until(ExpectedConditions.titleContains("Home"));
+
+		notePage.addNote("charles", "charles is awesome");
+
+
+		Thread.sleep(5000);
+
+		List<WebElement> rows = notePage.getNoteTable().findElements(By.cssSelector("tbody tr"));
+
+		notePage.editNote(rows.get(0), "Celz", "Little description");
+
+		rows = notePage.getNoteTable().findElements(By.cssSelector("tbody tr"));
+
+
+
+		Assertions.assertEquals(1, rows.size());
+	}
+
+	@Test
+	public void testCredentialUpdate() throws InterruptedException {
+		doMockSignUp("charles", "onuorah", "admin", "admin");
+		// Log in to our dummy account.
+		doLoginWithoutTest("admin", "admin");
+
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+
+		webDriverWait.until(ExpectedConditions.titleContains("Home"));
+
+		credentialPage.addCredential("charles", "charles", "admin");
+
+
+		Thread.sleep(5000);
+
+		List<WebElement> rows = credentialPage.getCredentialTable().findElements(By.cssSelector("tbody tr"));
+
+		credentialPage.editCredential(rows.get(0), "charles", "charlesn", "admin");
+
+		rows = credentialPage.getCredentialTable().findElements(By.cssSelector("tbody tr"));
+
+
+
+		Assertions.assertEquals(1, rows.size());
 	}
 
 
