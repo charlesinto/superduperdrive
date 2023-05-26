@@ -75,49 +75,39 @@ public class CredentialPage {
         deleteButton.click();
     }
 
-    public void editNote(WebElement tableElement, String title, String description) throws InterruptedException {
+    public void editCredential(WebElement tableElement, String url, String userName, String password) throws InterruptedException {
 
         wait.until(ExpectedConditions.elementToBeClickable(credentialTab));
         credentialTab.click();
 
-        WebElement titleElement = tableElement.findElement(By.tagName("th"));
 
-        WebElement descriptionElement = tableElement.findElement(By.tagName("td"));
+        WebElement editButton = tableElement.findElement(By.cssSelector(".btn.btn-success"));
+
+        wait.until(ExpectedConditions.elementToBeClickable(editButton));
+
+        editButton.click();
 
         wait.until(ExpectedConditions.elementToBeClickable(modalOpenButton));
-        modalOpenButton.click();
-
-        wait.until(ExpectedConditions.visibilityOf(credentialUrlField));
-
-        JavascriptExecutor jse = (JavascriptExecutor)webDriver;
-
-        jse.executeScript("document.querySelector('#note-id').setAttribute('type', 'text');");
-
-        userNameField.sendKeys("1");
-
+        Thread.sleep(2000);
         credentialUrlField.clear();
-        credentialUrlField.sendKeys(titleElement.getText());
+        credentialUrlField.sendKeys(userName);
 
-        credentialUrlField.clear();
-        credentialUrlField.sendKeys(title);
-
-        noteDescription.clear();
-        noteDescription.sendKeys(descriptionElement.getText());
-
-        noteDescription.clear();
-        noteDescription.sendKeys(description);
+        userNameField.clear();
+        userNameField.sendKeys(userName);
 
         credentialSaveButton.click();
+
+        wait.until(ExpectedConditions.elementToBeClickable(passwordField));
+
+        passwordField.clear();
+        passwordField.sendKeys(password);
 
         Thread.sleep(10000);
 
         wait.until(ExpectedConditions.elementToBeClickable(credentialTab));
         credentialTab.click();
 
-
-
     }
-
     public WebElement getCredentialTable(){
         return credentialTable;
     }

@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.services.Impl;
 import com.udacity.jwdnd.course1.cloudstorage.apiModel.request.NoteRequest;
 import com.udacity.jwdnd.course1.cloudstorage.apiModel.response.NoteResponse;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.NoteMapper;
+import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class NoteServiceImpl implements NoteService {
@@ -53,7 +55,7 @@ public class NoteServiceImpl implements NoteService {
         if(user == null) return new NoteResponse("Unable to perform action", null);
         noteRequest.setUserId(user.getUserId());
 
-        int row = noteMapper.update(new Note(noteRequest.getNoteId(), noteRequest.getNoteTitle(), noteRequest.getNoteDescription(), user.getUserId()), user.getUserId());
+        int row = noteMapper.update(new Note(noteRequest.getNoteId(), noteRequest.getNoteTitle(), noteRequest.getNoteDescription(), user.getUserId()));
 
         if(row < 0) return new NoteResponse("Unable to complete requees. Please try again", null);
 

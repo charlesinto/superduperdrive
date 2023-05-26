@@ -82,25 +82,16 @@ public class NotePage {
 
         WebElement descriptionElement = tableElement.findElement(By.tagName("td"));
 
+        WebElement editButton = tableElement.findElement(By.cssSelector(".btn.btn-success"));
+
+        wait.until(ExpectedConditions.elementToBeClickable(editButton));
+
+        editButton.click();
+
         wait.until(ExpectedConditions.elementToBeClickable(modalOpenButton));
-        modalOpenButton.click();
-
-        wait.until(ExpectedConditions.visibilityOf(noteTitleField));
-
-        JavascriptExecutor jse = (JavascriptExecutor)webDriver;
-
-        jse.executeScript("document.querySelector('#note-id').setAttribute('type', 'text');");
-
-        noteIdField.sendKeys("1");
-
-        noteTitleField.clear();
-        noteTitleField.sendKeys(titleElement.getText());
-
+        Thread.sleep(2000);
         noteTitleField.clear();
         noteTitleField.sendKeys(title);
-
-        noteDescription.clear();
-        noteDescription.sendKeys(descriptionElement.getText());
 
         noteDescription.clear();
         noteDescription.sendKeys(description);
@@ -111,8 +102,6 @@ public class NotePage {
 
         wait.until(ExpectedConditions.elementToBeClickable(noteTab));
         noteTab.click();
-
-
 
     }
 
